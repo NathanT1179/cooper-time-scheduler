@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule a Game with Cooper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffcc00, #0099cc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #0099cc;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #0099cc;
+            text-align: left;
+        }
+        input, button {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #0099cc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #0099cc;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #0077aa;
+        }
+        #confirmation {
+            display: none;
+        }
+        #confirmation h2 {
+            color: #0099cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Schedule a Game with Cooper</h1>
+        <form id="scheduleForm">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required>
+            <label for="date">Preferred Date</label>
+            <input type="date" id="date" name="date" required>
+            <label for="time">Preferred Time</label>
+            <input type="time" id="time" name="time" required>
+            <button type="submit">Reserve Time</button>
+        </form>
+        <div id="confirmation">
+            <h2>Reservation Confirmed!</h2>
+            <p>Thank you for scheduling a game session with Cooper.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('scheduleForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+
+            fetch('/schedule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, date, time })
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      document.getElementById('scheduleForm').style.display = 'none';
+                      document.getElementById('confirmation').style.display = 'block';
+                  } else {
+                      alert('Failed to schedule. Please try again.');
+                  }
+              });
+        });
+    </script>
+</body>
+</html>
+
